@@ -49,6 +49,7 @@ export default class LoginPage extends Component {
   render() {
     const { login, submitting } = this.props;
     const { type } = this.state;
+    // alert(" login : login: " + JSON.stringify(login))
     return (
       <div className={styles.main}>
         <Login
@@ -58,7 +59,7 @@ export default class LoginPage extends Component {
         >
           <Tab key="account" tab="">
             {
-              login.status !== 200 &&
+              login.statusCode !== 200 &&
               login.type === 'account' &&
               !login.submitting &&
               this.renderMessage('账户或密码错误')

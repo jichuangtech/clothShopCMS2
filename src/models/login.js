@@ -15,6 +15,7 @@ export default {
       const response = yield call(loginCMS, payload.userName, payload.password);
       response.currentAuthority = 'user';
       response.type = 'account';
+      response.submitting = false;
       yield put({
         type: 'changeLoginStatus',
         payload: response,
@@ -60,6 +61,8 @@ export default {
       return {
         ...state,
         status: payload.status,
+        statusCode: payload.statusCode,
+        submitting: payload.submitting,
         type: payload.type,
       };
     },
