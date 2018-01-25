@@ -20,7 +20,7 @@ const CreateForm = Form.create()((props) => {
   };
   return (
     <Modal
-      title="新建规则"
+      title="新增商品分类"
       visible={modalVisible}
       onOk={okHandle}
       onCancel={() => parent.handleModalVisible()}
@@ -28,7 +28,7 @@ const CreateForm = Form.create()((props) => {
       <FormItem
         labelCol={{ span: 5 }}
         wrapperCol={{ span: 15 }}
-        label="描述"
+        label="商品分类"
       >
         {form.getFieldDecorator('desc', {
           rules: [{ required: true, message: 'Please input some description...' }],
@@ -40,9 +40,10 @@ const CreateForm = Form.create()((props) => {
   );
 });
 
-@connect(({ rule, loading }) => ({
+@connect(({ rule, loading, categories }) => ({
   rule,
   loading: loading.models.rule,
+  categories,
 }))
 @Form.create()
 export default class TableList extends PureComponent {
@@ -57,7 +58,8 @@ export default class TableList extends PureComponent {
   componentDidMount() {
     const { dispatch } = this.props;
     dispatch({
-      type: 'rule/fetch',
+      type: 'categories/queryCategories',
+      // type: 'rule/fetch',
     });
   }
 
@@ -172,6 +174,10 @@ export default class TableList extends PureComponent {
     });
   }
 
+
+  /**
+   *  进行商品分类名字的新增
+   **/
   handleAdd = () => {
     this.props.dispatch({
       type: 'rule/add',
@@ -192,29 +198,29 @@ export default class TableList extends PureComponent {
       <Form onSubmit={this.handleSearch} layout="inline">
         <Row gutter={{ md: 8, lg: 24, xl: 48 }}>
           <Col md={8} sm={24}>
-            <FormItem label="规则编号">
+            <FormItem label="编号">
               {getFieldDecorator('no')(
                 <Input placeholder="请输入" />
               )}
             </FormItem>
           </Col>
-          <Col md={8} sm={24}>
-            <FormItem label="使用状态">
-              {getFieldDecorator('status')(
-                <Select placeholder="请选择" style={{ width: '100%' }}>
-                  <Option value="0">关闭</Option>
-                  <Option value="1">运行中</Option>
-                </Select>
-              )}
-            </FormItem>
-          </Col>
+          {/*<Col md={8} sm={24}>*/}
+            {/*<FormItem label="使用状态">*/}
+              {/*{getFieldDecorator('status')(*/}
+                {/*<Select placeholder="请选择" style={{ width: '100%' }}>*/}
+                  {/*<Option value="0">关闭</Option>*/}
+                  {/*<Option value="1">运行中</Option>*/}
+                {/*</Select>*/}
+              {/*)}*/}
+            {/*</FormItem>*/}
+          {/*</Col>*/}
           <Col md={8} sm={24}>
             <span className={styles.submitButtons}>
               <Button type="primary" htmlType="submit">查询</Button>
               <Button style={{ marginLeft: 8 }} onClick={this.handleFormReset}>重置</Button>
-              <a style={{ marginLeft: 8 }} onClick={this.toggleForm}>
-                展开 <Icon type="down" />
-              </a>
+              {/*<a style={{ marginLeft: 8 }} onClick={this.toggleForm}>*/}
+                {/*展开 <Icon type="down" />*/}
+              {/*</a>*/}
             </span>
           </Col>
         </Row>
@@ -299,9 +305,8 @@ export default class TableList extends PureComponent {
   }
 
   render() {
-    const { rule: { data }, loading } = this.props;
+    const { rule: { data }, categories: { list, loading } } = this.props;
     const { selectedRows, modalVisible, addInputValue } = this.state;
-
     const menu = (
       <Menu onClick={this.handleMenuClick} selectedKeys={[]}>
         <Menu.Item key="remove">删除</Menu.Item>
@@ -316,7 +321,7 @@ export default class TableList extends PureComponent {
     };
 
     return (
-      <PageHeaderLayout title="查询表格">
+      <PageHeaderLayout title="查询分类">
         <Card bordered={false}>
           <div className={styles.tableList}>
             <div className={styles.tableListForm}>
@@ -324,12 +329,12 @@ export default class TableList extends PureComponent {
             </div>
             <div className={styles.tableListOperator}>
               <Button icon="plus" type="primary" onClick={() => this.handleModalVisible(true)}>
-                新建
+                新增分类
               </Button>
               {
                 selectedRows.length > 0 && (
                   <span>
-                    <Button>批量操作</Button>
+                     {/* <Button>批量操作</Button> */}
                     <Dropdown overlay={menu}>
                       <Button>
                         更多操作 <Icon type="down" />
@@ -342,7 +347,7 @@ export default class TableList extends PureComponent {
             <StandardTable
               selectedRows={selectedRows}
               loading={loading}
-              data={data}
+              data={list}
               onSelectRow={this.handleSelectRows}
               onChange={this.handleStandardTableChange}
             />

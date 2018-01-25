@@ -9,12 +9,13 @@ export default {
   },
 
   effects: {
+    // login(action , {})
     *login({ payload }, { call, put }) {
       // alert(" login payload: " + JSON.stringify(payload))
       // const response = yield call(fakeAccountLogin, payload);
       const response = yield call(loginCMS, payload.userName, payload.password);
       response.currentAuthority = 'user';
-      response.type = 'account';
+      response.type = payload.type;
       response.submitting = false;
       yield put({
         type: 'changeLoginStatus',
@@ -55,7 +56,9 @@ export default {
   },
 
   reducers: {
-    changeLoginStatus(state, { payload }) {
+    changeLoginStatus(state, action) {
+      let payload = action.payload;
+      // alert(" changeLoginStatus action: " + JSON.stringify(action))
       console.log("changeLoginStatus payload: " + JSON.stringify(payload))
       setAuthority(payload.currentAuthority);
       return {

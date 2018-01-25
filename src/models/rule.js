@@ -1,4 +1,4 @@
-import { queryRule, removeRule, addRule } from '../services/api';
+import { queryRule, removeRule, addRule, queryGoodsCategories } from '../services/api';
 
 export default {
   namespace: 'rule',
@@ -37,6 +37,12 @@ export default {
   },
 
   reducers: {
+    /**
+     * @param state   是目前的状态
+     * @param action  是本次要处理的action
+     * {  type: xxx, payload: yyyy }
+     * @returns {{data}}
+     */
     save(state, action) {
       return {
         ...state,

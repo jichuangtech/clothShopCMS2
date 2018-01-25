@@ -74,6 +74,11 @@ export async function loginCMS(username, password) {
   return request(url);
 }
 
+export async function queryGoodsCategories() {
+  const url = `${Urls.GOODS_CATEGORIES_URL}`;
+  return request(url);
+}
+
 export async function fakeRegister(params) {
   return request('/api/register', {
     method: 'POST',

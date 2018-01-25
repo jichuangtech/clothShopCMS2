@@ -31,12 +31,15 @@ const menuData = [{
     path: 'advanced-form',
   }],
 }, {
-  name: '列表页',
+  name: '商品分类',
   icon: 'table',
   path: 'list',
   children: [{
-    name: '查询表格',
+    name: '商品分类查看',
     path: 'table-list',
+  }, {
+    name: '商品查询',
+    path: 'goods-query',
   }, {
     name: '标准列表',
     path: 'basic-list',

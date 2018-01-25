@@ -2,6 +2,7 @@ import React, { PureComponent, Fragment } from 'react';
 import moment from 'moment';
 import { Table, Alert, Badge, Divider } from 'antd';
 import styles from './index.less';
+import * as Urls from '../../utils/Urls'
 
 const statusMap = ['default', 'processing', 'success', 'error'];
 class StandardTable extends PureComponent {
@@ -42,29 +43,48 @@ class StandardTable extends PureComponent {
 
   render() {
     const { selectedRowKeys, totalCallNo } = this.state;
-    const { data: { list, pagination }, loading } = this.props;
-
-    const status = ['关闭', '运行中', '已上线', '异常'];
+    // const { data: { pagination }, loading, list } = this.props;
+    const { data, loading } = this.props;
+    const pagination = {
+      total: data.length,
+    };
+    const status = ['下架', '上架', '无库存'];
 
     const columns = [
       {
-        title: '规则编号',
-        dataIndex: 'no',
+        title: '图片',
+        dataIndex: 'image',
+        render: val => {
+          const image = Urls.PIC + val;
+          return (<img style={{width: 34, height: 34}}
+                       src={image}/>);
+        },
+      },
+      {
+        title: '分类名',
+        dataIndex: 'name',
       },
       {
         title: '描述',
-        dataIndex: 'description',
+        dataIndex: 'name',
       },
+      // {
+      //   title: '服务调用次数',
+      //   dataIndex: 'callNo',
+      //   sorter: true,
+      //   align: 'right',
+      //   render: val => `${val} 万`,
+      // },
       {
-        title: '服务调用次数',
-        dataIndex: 'callNo',
+        title: '商品数',
+        dataIndex: 'goodsList',
         sorter: true,
         align: 'right',
-        render: val => `${val} 万`,
+        render: val => `${val.length} 个`,
       },
       {
         title: '状态',
-        dataIndex: 'status',
+        dataIndex: 'isShow',
         filters: [
           {
             text: status[0],
@@ -78,28 +98,26 @@ class StandardTable extends PureComponent {
             text: status[2],
             value: 2,
           },
-          {
-            text: status[3],
-            value: 3,
-          },
         ],
         render(val) {
           return <Badge status={statusMap[val]} text={status[val]} />;
         },
       },
-      {
-        title: '更新时间',
-        dataIndex: 'updatedAt',
-        sorter: true,
-        render: val => <span>{moment(val).format('YYYY-MM-DD HH:mm:ss')}</span>,
-      },
+      // {
+      //   title: '更新时间',
+      //   dataIndex: 'updatedAt',
+      //   sorter: true,
+      //   render: val => <span>{moment(val).format('YYYY-MM-DD HH:mm:ss')}</span>,
+      // },
       {
         title: '操作',
         render: () => (
           <Fragment>
-            <a href="">配置</a>
+            <a href="">详情</a>
             <Divider type="vertical" />
-            <a href="">订阅警报</a>
+            <a href="">编辑</a>
+            <Divider type="vertical" />
+            <a href="" color="red">删除</a>
           </Fragment>
         ),
       },
@@ -107,7 +125,7 @@ class StandardTable extends PureComponent {
 
     const paginationProps = {
       showSizeChanger: true,
-      showQuickJumper: true,
+      showQuickJumper: false,
       ...pagination,
     };
 
@@ -126,7 +144,7 @@ class StandardTable extends PureComponent {
             message={(
               <div>
                 已选择 <a style={{ fontWeight: 600 }}>{selectedRowKeys.length}</a> 项&nbsp;&nbsp;
-                服务调用总计 <span style={{ fontWeight: 600 }}>{totalCallNo}</span> 万
+                {/*服务调用总计 <span style={{ fontWeight: 600 }}>{totalCallNo}</span> 万*/}
                 <a onClick={this.cleanSelectedKeys} style={{ marginLeft: 24 }}>清空</a>
               </div>
             )}
@@ -136,9 +154,9 @@ class StandardTable extends PureComponent {
         </div>
         <Table
           loading={loading}
-          rowKey={record => record.key}
+          rowKey={record => record.id}
           rowSelection={rowSelection}
-          dataSource={list}
+          dataSource={data}
           columns={columns}
           pagination={paginationProps}
           onChange={this.handleTableChange}
