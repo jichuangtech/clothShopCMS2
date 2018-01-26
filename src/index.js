@@ -9,6 +9,7 @@ import createLoading from 'dva-loading';
 import 'moment/locale/zh-cn';
 import FastClick from 'fastclick';
 import './rollbar';
+import models from './models/index';
 
 import './index.less';
 // 1. Initialize
@@ -20,8 +21,10 @@ const app = dva({
 app.use(createLoading());
 
 // 3. Register global model
-app.model(require('./models/global').default);
-app.model(require("./models/categories").default);
+// app.model(require('./models/global').default);
+models.forEach((m) => {
+  app.model(m.default);
+});
 
 // 4. Router
 app.router(require('./router').default);
