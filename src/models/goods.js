@@ -1,4 +1,4 @@
-import { queryGoods} from '../services/api';
+import { queryGoods, queryColor } from '../services/api';
 
 export default {
   namespace: 'goods',
@@ -6,6 +6,7 @@ export default {
   state: {
     list: [],
     loading: true,
+    colors: [],
   },
 
   effects: {
@@ -16,6 +17,14 @@ export default {
         payload: response.data,
       });
     },
+
+    *queryColor({ payload }, { call, put }) {
+      const response = yield call(queryColor, payload);
+      yield put({
+        type: 'saveColor',
+        payload: response,
+      });
+    },
   },
 
   reducers: {
@@ -23,6 +32,14 @@ export default {
       return {
         ...state,
         list: action.payload,
+        loading: false,
+      };
+    },
+
+    saveColor(state, action) {
+      return {
+        ...state,
+        colors: action.payload,
         loading: false,
       };
     },

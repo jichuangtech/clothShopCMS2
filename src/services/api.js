@@ -84,6 +84,11 @@ export async function queryGoods() {
   return request(url);
 }
 
+export async function queryColor() {
+  const url = `${Urls.COLOR_URL}`;
+  return request(url);
+}
+
 export async function fakeRegister(params) {
   return request('/api/register', {
     method: 'POST',

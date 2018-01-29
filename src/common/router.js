@@ -112,6 +112,9 @@ export const getRouterData = (app) => {
     '/list/goods-query': {
       component: dynamicWrapper(app, ['list'], () => import('../routes/Goods/QueryView')),
     },
+    '/list/goods-add': {
+      component: dynamicWrapper(app, ['list'], () => import('../routes/Forms/GoodsForm')),
+    },
     '/list/card-list': {
       component: dynamicWrapper(app, ['list'], () => import('../routes/List/CardList')),
     },
