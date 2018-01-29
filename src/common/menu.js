@@ -1,45 +1,18 @@
 import { isUrl } from '../utils/utils';
 
 const menuData = [{
-  name: 'dashboard',
-  icon: 'dashboard',
-  path: 'dashboard',
-  children: [{
-    name: '分析页',
-    path: 'analysis',
-  }, {
-    name: '监控页',
-    path: 'monitor',
-  }, {
-    name: '工作台',
-    path: 'workplace',
-    // hideInMenu: true,
-  }],
-}, {
-  name: '表单页',
-  icon: 'form',
-  path: 'form',
-  children: [{
-    name: '基础表单',
-    path: 'basic-form',
-  }, {
-    name: '分步表单',
-    path: 'step-form',
-  }, {
-    name: '高级表单',
-    authority: 'admin',
-    path: 'advanced-form',
-  }],
-}, {
-  name: '商品分类',
+  name: '商品管理',
   icon: 'table',
   path: 'list',
   children: [{
-    name: '商品分类查看',
+    name: '商品分类',
     path: 'table-list',
   }, {
     name: '商品查询',
     path: 'goods-query',
+  }, {
+    name: '商品添加',
+    path: 'goods-add',
   }, {
     name: '标准列表',
     path: 'basic-list',
@@ -59,6 +32,21 @@ const menuData = [{
       name: '搜索列表（应用）',
       path: 'applications',
     }],
+  }],
+}, {
+  name: '表单页',
+  icon: 'form',
+  path: 'form',
+  children: [{
+    name: '基础表单',
+    path: 'basic-form',
+  }, {
+    name: '分步表单',
+    path: 'step-form',
+  }, {
+    name: '高级表单',
+    authority: 'admin',
+    path: 'advanced-form',
   }],
 }, {
   name: '详情页',
@@ -100,6 +88,21 @@ const menuData = [{
     name: '触发异常',
     path: 'trigger',
     hideInMenu: true,
+  }],
+}, {
+  name: 'dashboard',
+  icon: 'dashboard',
+  path: 'dashboard',
+  children: [{
+    name: '分析页',
+    path: 'analysis',
+  }, {
+    name: '监控页',
+    path: 'monitor',
+  }, {
+    name: '工作台',
+    path: 'workplace',
+    // hideInMenu: true,
   }],
 }, {
   name: '账户',
