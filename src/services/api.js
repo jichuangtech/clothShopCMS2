@@ -79,6 +79,11 @@ export async function queryGoodsCategories() {
   return request(url);
 }
 
+export async function queryGoods() {
+  const url = `${Urls.GOODS_URL}`;
+  return request(url);
+}
+
 export async function fakeRegister(params) {
   return request('/api/register', {
     method: 'POST',

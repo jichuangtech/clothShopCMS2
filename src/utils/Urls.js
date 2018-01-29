@@ -4,7 +4,7 @@ const ROUTER_PREFIX = '';
 // const ROUTER_PREFIX = "/clothShopCMS";
 
 const COLOR_URL = PRE_FIX + '/api/goodsInfo/color';
-const GOODS_URL = PRE_FIX + '/api/goods';
+const GOODS_URL = PRE_FIX + '/api/info/goods';
 const GOODS_CATEGORIES_URL = PRE_FIX + '/api/info/goodsCategories';
 const LOGIN_URL = PRE_FIX + '/login';
 const ORDERS_URL = PRE_FIX + '/api/order/'

@@ -53,7 +53,7 @@ class StandardTable extends PureComponent {
     const columns = [
       {
         title: '图片',
-        dataIndex: 'image',
+        dataIndex: 'originalImg',
         render: val => {
           const image = Urls.PIC + val;
           return (<img style={{width: 34, height: 34}}
@@ -61,12 +61,12 @@ class StandardTable extends PureComponent {
         },
       },
       {
-        title: '分类名',
-        dataIndex: 'name',
+        title: '商品',
+        dataIndex: 'goodsName',
       },
       {
-        title: '描述',
-        dataIndex: 'name',
+        title: '简介',
+        dataIndex: 'goodsRemark',
       },
       // {
       //   title: '服务调用次数',
@@ -76,32 +76,11 @@ class StandardTable extends PureComponent {
       //   render: val => `${val} 万`,
       // },
       {
-        title: '商品数',
-        dataIndex: 'goodsList',
+        title: '库存',
+        dataIndex: 'storeCount',
         sorter: true,
         align: 'right',
-        render: val => `${val.length} 个`,
-      },
-      {
-        title: '状态',
-        dataIndex: 'isShow',
-        filters: [
-          {
-            text: status[0],
-            value: 0,
-          },
-          {
-            text: status[1],
-            value: 1,
-          },
-          {
-            text: status[2],
-            value: 2,
-          },
-        ],
-        render(val) {
-          return <Badge status={statusMap[val]} text={status[val]} />;
-        },
+        render: val => `${val} 个`,
       },
       // {
       //   title: '更新时间',
