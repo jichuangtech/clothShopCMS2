@@ -1,3 +1,4 @@
+"publicPath": "https://www.jichuangtech.site/clothShopCMS2/",
 [English](./README.md) | 简体中文
 
 # Ant Design Pro

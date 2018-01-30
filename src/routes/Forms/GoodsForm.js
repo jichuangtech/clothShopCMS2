@@ -24,6 +24,15 @@ export default class GoodsForm extends PureComponent {
     this.state = {
       isCodeCheck: false,
       isKgCheck: false,
+      colorCheckedList: [],
+      colorIndeterminate: false,
+      colorCheckAll: false,
+      colorOptions: [],
+    };
+    // 成员变量的定义
+    this.colorData = {
+      options: [],
+      ids: [],
     };
   }
 
@@ -34,15 +43,26 @@ export default class GoodsForm extends PureComponent {
       // type: 'rule/fetch',
     });
   }
-  handleSubmit = (e) => {
-    e.preventDefault();
-    this.props.form.validateFieldsAndScroll((err, values) => {
-      if (!err) {
-        this.props.dispatch({
-          type: 'form/submitRegularForm',
-          payload: values,
-        });
-      }
+
+  componentWillUpdate(prevProps, prevState) {
+    this.colorData = this.getColorData(prevProps.goods.colors);
+  }
+
+
+  onColorCheckAllChange(e) {
+    this.setState({
+      colorCheckedList: e.target.checked ? this.colorData.ids : [],
+      colorIndeterminate: false,
+      colorCheckAll: e.target.checked,
+    });
+  }
+
+  onColorCheckChange(colorCheckedList) {
+    this.setState({
+      colorCheckedList,
+      colorIndeterminate: !!colorCheckedList.length
+      && (colorCheckedList.length < this.colorData.options.length),
+      colorCheckAll: colorCheckedList.length === this.colorData.options.length,
     });
   }
 
@@ -58,19 +78,36 @@ export default class GoodsForm extends PureComponent {
     });
   }
 
-  getColorOptions(colors) {
-    // alert(" getColorOptions colors: " + JSON.stringify(colors));
+  getColorData(colors) {
     const options = [];
+    const ids = [];
     for (const key in colors) {
       const color = colors[key];
       const opt = {
         label: color.colorName,
         value: color.id,
       };
+      ids.push(color.id);
       options.push(opt);
     }
-    return options;
+    return {
+      options,
+      ids,
+    };
   }
+
+  handleSubmit = (e) => {
+    e.preventDefault();
+    this.props.form.validateFieldsAndScroll((err, values) => {
+      if (!err) {
+        this.props.dispatch({
+          type: 'form/submitRegularForm',
+          payload: values,
+        });
+      }
+    });
+  }
+
   render() {
     const { submitting, goods: { colors } } = this.props;
     const { getFieldDecorator, getFieldValue } = this.props.form;
@@ -247,8 +284,18 @@ export default class GoodsForm extends PureComponent {
               {getFieldDecorator('isCodeCheck')(
                 <div>
                   <CheckboxGroup
-                    options={this.getColorOptions(colors)}
+                    options={this.colorData.options}
+                    value={this.state.colorCheckedList}
+                    onChange={colorCheckedList => this.onColorCheckChange(colorCheckedList)}
                   />
+                  |
+                  <Checkbox
+                    indeterminate={this.state.colorIndeterminate}
+                    onChange={event => this.onColorCheckAllChange(event)}
+                    checked={this.state.colorCheckAll}
+                  >
+                      全选
+                  </Checkbox>
                 </div>
               )}
             </FormItem>
