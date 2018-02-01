@@ -1,4 +1,6 @@
-import { queryGoods, queryColor } from '../services/api';
+import { queryGoods, queryColor, addGoods } from '../services/api';
+import { message } from 'antd';
+import { routerRedux } from 'dva/router';
 
 export default {
   namespace: 'goods',
@@ -7,6 +9,7 @@ export default {
     list: [],
     loading: true,
     colors: [],
+    submitting: false,
   },
 
   effects: {
@@ -25,6 +28,28 @@ export default {
         payload: response,
       });
     },
+
+    *addGoods({ payload }, { call, put }) {
+      const response = yield call(addGoods, payload);
+      alert(" addGoods response: " + JSON.stringify(response));
+      // yield put({
+      //   type: 'addGoods',
+      //   payload: {
+      //     submitting: false,
+      //   },
+      // });
+
+
+      if(response.statusCode === 200) {
+        message.success('商品添加成功.');
+        yield put(routerRedux.push('/result/addGoodsSuccess'));
+      } if(response.statusCode === 102 || response.statusCode === 101) {
+        yield put({ type: 'login/logout', payload: ''});
+      }  else {
+        message.error('商品添加失败: ' + response.statusCode);
+        yield put(routerRedux.push('/result/fail'));
+      }
+    },
   },
 
   reducers: {
@@ -41,6 +66,11 @@ export default {
         ...state,
         colors: action.payload,
         loading: false,
+      };
+    },
+    addGoods(state, action) {
+      return {
+        submitting: action.payload.submitting,
       };
     },
   },

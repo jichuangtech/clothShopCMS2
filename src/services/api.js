@@ -84,6 +84,14 @@ export async function queryGoods() {
   return request(url);
 }
 
+export async function addGoods(params) {
+  const url = `${Urls.ADD_GOODS_URL}`;
+  return request(url, {
+    method: 'POST',
+    body: params,
+  });
+}
+
 export async function queryColor() {
   const url = `${Urls.COLOR_URL}`;
   return request(url);

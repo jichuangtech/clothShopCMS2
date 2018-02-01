@@ -9,11 +9,9 @@ export default {
   },
 
   effects: {
-    // login(action , {})
     *login({ payload }, { call, put }) {
-      // alert(" login payload: " + JSON.stringify(payload))
-      // const response = yield call(fakeAccountLogin, payload);
       const response = yield call(loginCMS, payload.userName, payload.password);
+      alert(" login response: " + JSON.stringify(response));
       response.currentAuthority = 'user';
       response.type = payload.type;
       response.submitting = false;
@@ -22,12 +20,12 @@ export default {
         payload: response,
       });
       // Login successfully
-      // if (response.status === 'ok') {
       if (response.statusCode === 200) {
         // 非常粗暴的跳转,登陆成功之后权限会变成user或admin,会自动重定向到主页
         // Login success after permission changes to admin or user
         // The refresh will automatically redirect to the home page
         // yield put(routerRedux.push('/'));
+        sessionStorage.setItem("access_token", response.data.token)
         window.location.reload();
       }
     },
@@ -43,6 +41,7 @@ export default {
         // yield put(routerRedux.push('/user/login'));
         // Login out after permission changes to admin or user
         // The refresh will automatically redirect to the login page
+        sessionStorage.setItem("access_token", '')
         yield put({
           type: 'changeLoginStatus',
           payload: {

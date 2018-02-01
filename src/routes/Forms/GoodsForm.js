@@ -1,7 +1,7 @@
 import React, { PureComponent } from 'react';
 import { connect } from 'dva';
 import {
-  Checkbox, Form, Input, DatePicker, Select, Button, Card, InputNumber, Radio, Icon, Tooltip,
+  Checkbox, Form, Input, DatePicker, message, Upload, Select, Button, Card, InputNumber, Radio, Icon, Tooltip,
 } from 'antd';
 import PageHeaderLayout from '../../layouts/PageHeaderLayout';
 import styles from './style.less';
@@ -14,7 +14,7 @@ const CheckboxGroup = Checkbox.Group;
 
 
 @connect(({ loading, goods }) => ({
-  submitting: loading.effects['form/submitRegularForm'],
+  submitting: loading.effects['goods/addGoods'],
   goods,
 }))
 @Form.create()
@@ -28,6 +28,9 @@ export default class GoodsForm extends PureComponent {
       colorIndeterminate: false,
       colorCheckAll: false,
       colorOptions: [],
+      codePrice: 0,
+      kgPrice: 0,
+      image: [],
     };
     // 成员变量的定义
     this.colorData = {
@@ -79,6 +82,9 @@ export default class GoodsForm extends PureComponent {
   }
 
   getColorData(colors) {
+    if (colors == null) {
+      return;
+    }
     const options = [];
     const ids = [];
     for (const key in colors) {
@@ -96,20 +102,72 @@ export default class GoodsForm extends PureComponent {
     };
   }
 
-  handleSubmit = (e) => {
+  handleSubmit(e) {
     e.preventDefault();
+    const { getFieldProps, getFieldValue } = this.props.form;
+    // const value = this.refs.test.refs.input.value;
     this.props.form.validateFieldsAndScroll((err, values) => {
-      if (!err) {
+      values.codePrice = 1;
+      values.kgPrice = 2;
+      // values.codePrice = this.state.codePrice;
+      // values.kgPrice = this.state.kgPrice;
+      if (!err ) {
         this.props.dispatch({
-          type: 'form/submitRegularForm',
-          payload: values,
+          type: 'goods/addGoods',
+          payload: this.getGoodsVo(values),
         });
       }
     });
   }
 
+  getGoodsVo(values) {
+    const goodsVO = {};
+    // let fieldsValue = form.getFieldsValue('isKgCheck');
+    // console.log(fieldsValue);
+
+    goodsVO.goodsName = values.goodsName;
+    goodsVO.categoryId = 1;
+    // goodsVO.categoryId = this.state.categoryId;
+    goodsVO.goodsSn = values.goodsSn;
+    goodsVO.storeCount = values.storeCount;
+    goodsVO.goodsRemark = values.goodsRemark;
+    goodsVO.goodsContent = values.goodsContent;
+    goodsVO.isRecommend = values.isRecommend;
+    goodsVO.isHot = values.isHot;
+    goodsVO.image = this.state.image[0];
+
+    if (this.state.isKgCheck) {
+      goodsVO.kgPrice = values.kgPrice;
+    }
+    if (this.state.isCodeCheck) {
+      goodsVO.codePrice = values.codePrice;
+    }
+
+    goodsVO.colorIds = this.state.colorCheckedList;
+
+    // goodsVO.image = this.state.image[0];
+    return goodsVO;
+  }
+
   render() {
-    const { submitting, goods: { colors } } = this.props;
+    const props = {
+      beforeUpload: (file) => {
+        let isImage = false;
+        if (file.type === 'image/jpeg' || file.type === 'image/png') {
+          isImage = true;
+        }
+        if (!isImage) {
+          message.error('请上传JPG/PNG的图片!');
+          return false;
+        }
+        this.setState(({ image }) => ({
+          image: [file],
+        }));
+        return false;
+      },
+      fileList: this.state.image,
+    };
+    const { submitting, goods } = this.props;
     const { getFieldDecorator, getFieldValue } = this.props.form;
     const formItemLayout = {
       labelCol: {
@@ -134,7 +192,7 @@ export default class GoodsForm extends PureComponent {
       <PageHeaderLayout title="添加商品" content="">
         <Card bordered={false}>
           <Form
-            onSubmit={this.handleSubmit}
+            onSubmit={e => this.handleSubmit(e)}
             hideRequiredMark
             style={{ marginTop: 8 }}
           >
@@ -142,7 +200,7 @@ export default class GoodsForm extends PureComponent {
               {...formItemLayout}
               label="商品名称"
             >
-              {getFieldDecorator('name', {
+              {getFieldDecorator('goodsName', {
                 rules: [{
                   required: true, message: '请输入商品名称',
                 }],
@@ -155,7 +213,7 @@ export default class GoodsForm extends PureComponent {
               {...formItemLayout}
               label="商品编号"
             >
-              {getFieldDecorator('sn', {
+              {getFieldDecorator('goodsSn', {
                 rules: [{
                   required: true, message: '请输入商品编号',
                 }],
@@ -168,9 +226,9 @@ export default class GoodsForm extends PureComponent {
               {...formItemLayout}
               label="库存"
             >
-              {getFieldDecorator('store', {
+              {getFieldDecorator('storeCount', {
                 rules: [{
-                  required: true, message: '请输入商品库存',
+                  required: true, message: '请输入¬商品库存',
                 }],
               })(
                 <Input placeholder="" />
@@ -181,7 +239,7 @@ export default class GoodsForm extends PureComponent {
               {...formItemLayout}
               label="简单描述"
             >
-              {getFieldDecorator('simpleInfo', {
+              {getFieldDecorator('goodsRemark', {
                 rules: [{
                   required: true, message: '请输入简单描述',
                 }],
@@ -194,7 +252,7 @@ export default class GoodsForm extends PureComponent {
               {...formItemLayout}
               label="详细描述"
             >
-              {getFieldDecorator('detailInfo', {
+              {getFieldDecorator('goodsContent', {
                 rules: [{
                   required: true, message: '请输入详细描述',
                 }],
@@ -209,12 +267,12 @@ export default class GoodsForm extends PureComponent {
               help=""
             >
               <div>
-                {getFieldDecorator('hot', {
+                {getFieldDecorator('isHot', {
                   initialValue: '1',
                 })(
                   <Radio.Group>
                     <Radio value="1">是</Radio>
-                    <Radio value="2">否</Radio>
+                    <Radio value="0">否</Radio>
                   </Radio.Group>
                 )}
               </div>
@@ -226,12 +284,12 @@ export default class GoodsForm extends PureComponent {
               help=""
             >
               <div>
-                {getFieldDecorator('recommeded', {
+                {getFieldDecorator('isRecommend', {
                   initialValue: '1',
                 })(
                   <Radio.Group>
                     <Radio value="1">是</Radio>
-                    <Radio value="2">否</Radio>
+                    <Radio value="0">否</Radio>
                   </Radio.Group>
                 )}
               </div>
@@ -249,7 +307,8 @@ export default class GoodsForm extends PureComponent {
                   >码
                   </Checkbox>
                   <Input
-                    ref="codePrice"
+                    ref="test"
+                    defaultValue={1}
                     placeholder="价格/码"
                     disabled={!this.state.isCodeCheck}
                   />
@@ -261,15 +320,16 @@ export default class GoodsForm extends PureComponent {
               {...formItemLayout}
               label="规格"
             >
-              {getFieldDecorator('isCodeCheck')(
+              {getFieldDecorator('isKgCheck')(
                 <div>
                   <Checkbox
-                    name="codeCheck"
+                    name="kgCheck"
                     onChange={event => this.onKgChange(event)}
                   >千克
                   </Checkbox>
                   <Input
-                    ref="codePrice"
+                    ref="kgPrice"
+                    defaultValue={12}
                     placeholder="价格/千克"
                     disabled={!this.state.isKgCheck}
                   />
@@ -302,113 +362,23 @@ export default class GoodsForm extends PureComponent {
 
             <FormItem
               {...formItemLayout}
-              label="起止日期"
+              label="商品图片"
+              hasFeedback
             >
-              {getFieldDecorator('date', {
-                rules: [{
-                  required: true, message: '请选择起止日期',
-                }],
-              })(
-                <RangePicker style={{ width: '100%' }} placeholder={['开始日期', '结束日期']} />
+              {getFieldDecorator('image')(
+                <Upload {...props}>
+                  <Button>
+                    <Icon type="upload" /> 选择图片
+                  </Button>
+                </Upload>
               )}
             </FormItem>
-            <FormItem
-              {...formItemLayout}
-              label="目标描述"
-            >
-              {getFieldDecorator('goal', {
-                rules: [{
-                  required: true, message: '请输入目标描述',
-                }],
-              })(
-                <TextArea style={{ minHeight: 32 }} placeholder="请输入你的阶段性工作目标" rows={4} />
-              )}
-            </FormItem>
-            <FormItem
-              {...formItemLayout}
-              label="衡量标准"
-            >
-              {getFieldDecorator('standard', {
-                rules: [{
-                  required: true, message: '请输入衡量标准',
-                }],
-              })(
-                <TextArea style={{ minHeight: 32 }} placeholder="请输入衡量标准" rows={4} />
-              )}
-            </FormItem>
-            <FormItem
-              {...formItemLayout}
-              label={
-                <span>
-                  客户
-                  <em className={styles.optional}>
-                    （选填）
-                    <Tooltip title="目标的服务对象">
-                      <Icon type="info-circle-o" style={{ marginRight: 4 }} />
-                    </Tooltip>
-                  </em>
-                </span>
-              }
-            >
-              {getFieldDecorator('client')(
-                <Input placeholder="请描述你服务的客户，内部客户直接 @姓名／工号" />
-              )}
-            </FormItem>
-            <FormItem
-              {...formItemLayout}
-              label={<span>邀评人<em className={styles.optional}>（选填）</em></span>}
-            >
-              {getFieldDecorator('invites')(
-                <Input placeholder="请直接 @姓名／工号，最多可邀请 5 人" />
-              )}
-            </FormItem>
-            <FormItem
-              {...formItemLayout}
-              label={<span>权重<em className={styles.optional}>（选填）</em></span>}
-            >
-              {getFieldDecorator('weight')(
-                <InputNumber placeholder="请输入" min={0} max={100} />
-              )}
-              <span>%</span>
-            </FormItem>
-            <FormItem
-              {...formItemLayout}
-              label="目标公开"
-              help="客户、邀评人默认被分享"
-            >
-              <div>
-                {getFieldDecorator('public', {
-                  initialValue: '1',
-                })(
-                  <Radio.Group>
-                    <Radio value="1">公开</Radio>
-                    <Radio value="2">部分公开</Radio>
-                    <Radio value="3">不公开</Radio>
-                  </Radio.Group>
-                )}
-                <FormItem style={{ marginBottom: 0 }}>
-                  {getFieldDecorator('publicUsers')(
-                    <Select
-                      mode="multiple"
-                      placeholder="公开给"
-                      style={{
-                        margin: '8px 0',
-                        display: getFieldValue('public') === '2' ? 'block' : 'none',
-                      }}
-                    >
-                      <Option value="1">同事甲</Option>
-                      <Option value="2">同事乙</Option>
-                      <Option value="3">同事丙</Option>
-                    </Select>
-                  )}
-                </FormItem>
-              </div>
-            </FormItem>
+
             <FormItem {...submitFormLayout} style={{ marginTop: 32 }}>
               <Button type="primary" htmlType="submit" loading={submitting}>
                 提交
               </Button>
-              <Button style={{ marginLeft: 8 }}>保存</Button>
+              <Button style={{ marginLeft: 8, display:'none' }}>保存</Button>
             </FormItem>
           </Form>
         </Card>

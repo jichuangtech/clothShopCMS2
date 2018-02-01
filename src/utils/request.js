@@ -46,8 +46,7 @@ export default function request(url, options) {
   const defaultOptions = {
     // credentials: 'include', 添加这句 请求会失败
     headers: {
-      'Accept': 'application/json',
-      'Content-Type': 'application/json; charset=utf-8',
+      'access_token': sessionStorage.getItem("access_token"),
     },
   };
   const newOptions = { ...defaultOptions, ...options };
@@ -55,8 +54,13 @@ export default function request(url, options) {
     newOptions.headers = {
       ...newOptions.headers,
     };
-    newOptions.body = JSON.stringify(newOptions.body);
-  }
+
+    const formData = new FormData();
+    for (let name in options.body) {
+      formData.append(name, options.body[name]);
+    }
+    newOptions.body = formData;
+  };
 
   return fetch(url, newOptions)
     .then(checkStatus)
@@ -69,6 +73,7 @@ export default function request(url, options) {
     .catch((e) => {
       const { dispatch } = store;
       const status = e.name;
+      alert("reqest catch  status: " + status);
       if (status === 401) {
         dispatch({
           type: 'login/logout',

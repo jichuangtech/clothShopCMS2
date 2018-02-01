@@ -1,5 +1,31 @@
+一：dva 在一个 model中调用另一个model的方法
+yeild put({type: 'one-namespace/reducerFunction', payload});
+
+二：上线的静态资源的地址
 "publicPath": "https://www.jichuangtech.site/clothShopCMS2/",
 [English](./README.md) | 简体中文
+
+三：对于fetch 和 Promise 的时候
+response
+
+一个 Promise，resolve 时回传 Response 对象：
+
+属性：
+status (number) - HTTP请求结果参数，在100–599 范围
+statusText (String) - 服务器返回的状态报告
+ok (boolean) - 如果返回200表示请求成功则为true
+headers (Headers) - 返回头部信息，下面详细介绍
+url (String) - 请求的地址
+方法：
+text() - 以string的形式生成请求text
+json() - 生成JSON.parse(responseText)的结果
+blob() - 生成一个Blob
+arrayBuffer() - 生成一个ArrayBuffer
+formData() - 生成格式化的数据，可用于其他的请求
+其他方法：
+clone()
+Response.error()
+Response.redirect()
 
 # Ant Design Pro
 

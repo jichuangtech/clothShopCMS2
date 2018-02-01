@@ -139,6 +139,10 @@ export const getRouterData = (app) => {
     '/result/success': {
       component: dynamicWrapper(app, [], () => import('../routes/Result/Success')),
     },
+
+    '/result/addGoodsSuccess': {
+      component: dynamicWrapper(app, [], () => import('../routes/Result/AddGoodsSuccess')),
+    },
     '/result/fail': {
       component: dynamicWrapper(app, [], () => import('../routes/Result/Error')),
     },
