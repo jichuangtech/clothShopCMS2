@@ -82,7 +82,7 @@ export default class GoodsForm extends PureComponent {
   }
 
   getColorData(colors) {
-    if (colors == null) {
+    if (colors === null) {
       return;
     }
     const options = [];

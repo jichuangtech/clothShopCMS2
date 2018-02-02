@@ -31,7 +31,6 @@ export default {
 
     *addGoods({ payload }, { call, put }) {
       const response = yield call(addGoods, payload);
-      alert(" addGoods response: " + JSON.stringify(response));
       // yield put({
       //   type: 'addGoods',
       //   payload: {
@@ -39,12 +38,11 @@ export default {
       //   },
       // });
 
-
       if(response.statusCode === 200) {
         message.success('商品添加成功.');
         yield put(routerRedux.push('/result/addGoodsSuccess'));
       } if(response.statusCode === 102 || response.statusCode === 101) {
-        yield put({ type: 'login/logout', payload: ''});
+        // yield put({ type: 'login/logout', payload: ''});
       }  else {
         message.error('商品添加失败: ' + response.statusCode);
         yield put(routerRedux.push('/result/fail'));

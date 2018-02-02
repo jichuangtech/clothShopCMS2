@@ -1,7 +1,8 @@
 import fetch from 'dva/fetch';
-import { notification } from 'antd';
+import { notification, message } from 'antd';
 import { routerRedux } from 'dva/router';
 import store from '../index';
+import ClothResponse from './ClothResponse';
 
 const codeMessage = {
   200: '服务器成功返回请求的数据',
@@ -36,6 +37,23 @@ function checkStatus(response) {
 }
 
 /**
+ * 检测是否token超时
+ * @param responseJson
+ */
+function checkAuthTimeout(responseJson) {
+  const { dispatch } = store;
+  const code = responseJson.statusCode;
+  if (code !== undefined
+    && (code === ClothResponse.TOKEN_INVALID
+      || code === ClothResponse.ACCESS_TOKEN_NOT_FOUND)) {
+    alert('登录超时，请重新登录!');
+    dispatch({
+      type: 'login/logout',
+    });
+  }
+}
+
+/**
  * Requests a URL, returning a promise.
  *
  * @param  {string} url       The URL we want to request
@@ -46,7 +64,7 @@ export default function request(url, options) {
   const defaultOptions = {
     // credentials: 'include', 添加这句 请求会失败
     headers: {
-      'access_token': sessionStorage.getItem("access_token"),
+      'access_token': localStorage.getItem("access_token"),
     },
   };
   const newOptions = { ...defaultOptions, ...options };
@@ -68,12 +86,13 @@ export default function request(url, options) {
       if (newOptions.method === 'DELETE' || response.status === 204) {
         return response.text();
       }
-      return response.json();
+      const obj = response.json();
+      obj.then(checkAuthTimeout);
+      return obj;
     })
     .catch((e) => {
       const { dispatch } = store;
       const status = e.name;
-      alert("reqest catch  status: " + status);
       if (status === 401) {
         dispatch({
           type: 'login/logout',
