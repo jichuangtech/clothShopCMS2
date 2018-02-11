@@ -1,8 +1,10 @@
 一：dva 在一个 model中调用另一个model的方法
-yeild put({type: 'one-namespace/reducerFunction', payload});
+yield put({type: 'one-namespace/reducerFunction', payload});
 
 二：上线的静态资源的地址
 "publicPath": "https://www.jichuangtech.site/clothShopCMS2/",
+本地
+"publicPath": "/",
 [English](./README.md) | 简体中文
 
 三：对于fetch 和 Promise 的时候

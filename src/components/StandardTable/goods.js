@@ -1,6 +1,6 @@
 import React, { PureComponent, Fragment } from 'react';
 import moment from 'moment';
-import { Table, Alert, Badge, Divider } from 'antd';
+import { Table, Alert, Badge, Divider, Popconfirm} from 'antd';
 import styles from './index.less';
 import * as Urls from '../../utils/Urls';
 
@@ -90,13 +90,18 @@ class StandardTable extends PureComponent {
       // },
       {
         title: '操作',
-        render: () => (
+        dataIndex: 'goodsId',
+        render: (val) => (
           <Fragment>
             <a href="">详情</a>
             <Divider type="vertical" />
             <a href="">编辑</a>
             <Divider type="vertical" />
-            <a href="" color="red">删除</a>
+            <Popconfirm title="是否要删除该商品？"
+                        onConfirm={()=> { this.props.onDelClick(val)}}
+                        okText="确定" cancelText="取消">
+              <a href="#">删除</a>
+            </Popconfirm>
           </Fragment>
         ),
       },

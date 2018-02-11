@@ -84,11 +84,24 @@ export async function queryGoods() {
   return request(url);
 }
 
+export async function queryGoodsByCategoryId(categoryId) {
+  const url = `${Urls.GOODS_CATEGORIES_URL}/${categoryId}/goods`;
+  return request(url);
+}
+
 export async function addGoods(params) {
-  const url = `${Urls.ADD_GOODS_URL}`;
+  const url = `${Urls.GOODS_URL}`;
   return request(url, {
     method: 'POST',
     body: params,
+  });
+}
+
+export async function delGoods(params) {
+  const url = `${Urls.GOODS_URL}`;
+  return request(url, {
+    method: 'DELETE',
+    params: params,
   });
 }
 

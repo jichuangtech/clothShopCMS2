@@ -1,4 +1,4 @@
-import { queryGoods, queryColor, addGoods } from '../services/api';
+import { queryGoods, queryColor, addGoods, delGoods, queryGoodsByCategoryId } from '../services/api';
 import { message } from 'antd';
 import { routerRedux } from 'dva/router';
 
@@ -14,7 +14,20 @@ export default {
 
   effects: {
     *queryGoods({ payload }, { call, put }) {
-      const response = yield call(queryGoods, payload);
+      const response = yield call(queryGoods);
+      yield put({
+        type: 'save',
+        payload: response.data,
+      });
+    },
+    *queryGoodsByCategoryId({ payload }, { call, put }) {
+      let response;
+      if (payload.categoryId === -1) {
+        response = yield call(queryGoods);  
+      } else {
+        response = yield call(queryGoodsByCategoryId, payload.categoryId);
+      }
+      
       yield put({
         type: 'save',
         payload: response.data,
@@ -31,20 +44,23 @@ export default {
 
     *addGoods({ payload }, { call, put }) {
       const response = yield call(addGoods, payload);
-      // yield put({
-      //   type: 'addGoods',
-      //   payload: {
-      //     submitting: false,
-      //   },
-      // });
-
-      if(response.statusCode === 200) {
+      if (response.statusCode === 200) {
         message.success('商品添加成功.');
-        yield put(routerRedux.push('/result/addGoodsSuccess'));
-      } if(response.statusCode === 102 || response.statusCode === 101) {
-        // yield put({ type: 'login/logout', payload: ''});
-      }  else {
-        message.error('商品添加失败: ' + response.statusCode);
+        yield put(routerRedux.push('/list/goods-query'));
+      } else {
+        message.error(`商品添加失败: ${response.statusCode}`);
+      }
+    },
+    *delGoods({ payload }, { call, put }) {
+      const params = [];
+      params.goodsId = payload.goodsId;
+      const response = yield call(delGoods, params);
+      if (response.statusCode === 200) {
+        message.success('商品删除成功');
+        yield put(routerRedux.push({ pathname:'/result/addGoodsSuccess/', state: { name:'huangbin' } }));
+        // yield put({ type: 'queryGoods' });
+      } else {
+        message.error(`商品删除失败: ${response.statusCode}`);
         yield put(routerRedux.push('/result/fail'));
       }
     },

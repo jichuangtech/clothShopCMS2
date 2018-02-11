@@ -55,7 +55,7 @@ const extra = (
 const actions = (
   <div>
     <Button type="primary">
-      <Link to="/list/goods-add">
+      <Link to={ { pathname:'/list/goods-add', state:{name:'bingo' } } }>
         继续添加
       </Link>
     </Button>
@@ -67,7 +67,8 @@ const actions = (
   </div>
 );
 
-export default () => (
+export default (props) => {
+  return (
   <PageHeaderLayout>
     <Card bordered={false}>
       <Result
@@ -83,4 +84,4 @@ export default () => (
       />
     </Card>
   </PageHeaderLayout>
-);
+)};

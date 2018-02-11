@@ -9,7 +9,6 @@ const INFO_GOODS_URL = PRE_FIX + '/api/info/goods';
 const GOODS_CATEGORIES_URL = PRE_FIX + '/api/goodsCategories';
 const INFO_GOODS_CATEGORIES_URL = PRE_FIX + '/api/info/goodsCategories';
 const LOGIN_URL = PRE_FIX + '/login';
-const ADD_GOODS_URL = PRE_FIX + "/api/goods";
 const ORDERS_URL = PRE_FIX + '/api/order/'
 const REGISTER_SUCCESS = 'register_success'
 const REGISTER_FAIL = 'register_fail'
@@ -19,5 +18,5 @@ const PIC = 'https://www.jichuangtech.site/clothshopserver/api/info/picture/'
 export {PRE_FIX, PIC,
   COLOR_URL,
   REGISTER_SUCCESS, REGISTER_FAIL, REGISTER_ERROR, GOODS_URL, GOODS_CATEGORIES_URL, LOGIN_URL, ROUTER_PREFIX
-  ,ADD_GOODS_URL, INFO_GOODS_URL, INFO_GOODS_CATEGORIES_URL
+  , INFO_GOODS_URL, INFO_GOODS_CATEGORIES_URL
 };

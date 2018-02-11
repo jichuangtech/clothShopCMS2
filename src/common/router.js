@@ -104,16 +104,16 @@ export const getRouterData = (app) => {
       component: dynamicWrapper(app, ['form'], () => import('../routes/Forms/AdvancedForm')),
     },
     '/list/table-list': {
-      component: dynamicWrapper(app, ['rule'], () => import('../routes/List/TableList')),
+      component: dynamicWrapper(app, ['categories', 'list'], () => import('../routes/List/TableList')),
     },
     '/list/basic-list': {
       component: dynamicWrapper(app, ['list'], () => import('../routes/List/BasicList')),
     },
     '/list/goods-query': {
-      component: dynamicWrapper(app, ['list'], () => import('../routes/Goods/QueryView')),
+      component: dynamicWrapper(app, ['goods', 'list'], () => import('../routes/Goods/QueryView')),
     },
     '/list/goods-add': {
-      component: dynamicWrapper(app, ['list'], () => import('../routes/Forms/GoodsForm')),
+      component: dynamicWrapper(app, ['goods', 'list'], () => import('../routes/Forms/GoodsForm')),
     },
     '/list/card-list': {
       component: dynamicWrapper(app, ['list'], () => import('../routes/List/CardList')),

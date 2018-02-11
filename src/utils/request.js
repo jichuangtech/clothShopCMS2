@@ -78,12 +78,23 @@ export default function request(url, options) {
       formData.append(name, options.body[name]);
     }
     newOptions.body = formData;
-  };
+  }
 
+  if (newOptions.method === 'DELETE') {
+    const params = newOptions.params;
+    let paramsArray = [];
+    //拼接参数
+    Object.keys(params).forEach(key => paramsArray.push(key + '=' + params[key]))
+    if (url.search(/\?/) === -1) {
+      url += '?' + paramsArray.join('&');
+    } else {
+      url += '&' + paramsArray.join('&');
+    }
+  }
   return fetch(url, newOptions)
     .then(checkStatus)
     .then((response) => {
-      if (newOptions.method === 'DELETE' || response.status === 204) {
+      if (response.status === 204) {
         return response.text();
       }
       const obj = response.json();

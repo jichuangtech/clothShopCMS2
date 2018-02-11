@@ -21,10 +21,10 @@ const app = dva({
 app.use(createLoading());
 
 // 3. Register global model
-// app.model(require('./models/global').default);
-models.forEach((m) => {
-  app.model(m.default);
-});
+app.model(require('./models/global').default);
+// models.forEach((m) => {
+//   app.model(m.default);
+// });
 
 // 4. Router
 app.router(require('./router').default);

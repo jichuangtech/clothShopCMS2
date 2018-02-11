@@ -59,7 +59,6 @@ export default class TableList extends PureComponent {
     const { dispatch } = this.props;
     dispatch({
       type: 'categories/queryCategories',
-      // type: 'rule/fetch',
     });
   }
 
@@ -305,7 +304,7 @@ export default class TableList extends PureComponent {
   }
 
   render() {
-    const { rule: { data }, categories: { list, loading } } = this.props;
+    const {categories: { list, loading } } = this.props;
     const { selectedRows, modalVisible, addInputValue } = this.state;
     const menu = (
       <Menu onClick={this.handleMenuClick} selectedKeys={[]}>
