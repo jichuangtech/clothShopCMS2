@@ -23,11 +23,11 @@ export default {
     *queryGoodsByCategoryId({ payload }, { call, put }) {
       let response;
       if (payload.categoryId === -1) {
-        response = yield call(queryGoods);  
+        response = yield call(queryGoods);
       } else {
         response = yield call(queryGoodsByCategoryId, payload.categoryId);
       }
-      
+
       yield put({
         type: 'save',
         payload: response.data,
@@ -57,8 +57,7 @@ export default {
       const response = yield call(delGoods, params);
       if (response.statusCode === 200) {
         message.success('商品删除成功');
-        yield put(routerRedux.push({ pathname:'/result/addGoodsSuccess/', state: { name:'huangbin' } }));
-        // yield put({ type: 'queryGoods' });
+        yield put({ type: 'queryGoods' });
       } else {
         message.error(`商品删除失败: ${response.statusCode}`);
         yield put(routerRedux.push('/result/fail'));

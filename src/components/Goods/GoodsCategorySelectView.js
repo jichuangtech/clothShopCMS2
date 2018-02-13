@@ -13,7 +13,6 @@ class GoodsCategorySelectView extends Component {
   }
 
   componentDidMount() {
-    console.log(' GoodsCategorySelectView componentDidMount');
     const { dispatch } = this.props;
     dispatch({
       type: 'categories/queryCategoriesOption',
@@ -57,7 +56,6 @@ class GoodsCategorySelectView extends Component {
   }
 
   render() {
-    console.log(' GoodsCategorySelectView render: ' + JSON.stringify(this.props.goodsCategoryOptions));
     return (
       <SelectView
         className={style.topNavItem}
@@ -68,7 +66,6 @@ class GoodsCategorySelectView extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    console.log(' GoodsCategorySelectView componentWillReceiveProps nextProps: ' + JSON.stringify(nextProps));
   }
 }
 

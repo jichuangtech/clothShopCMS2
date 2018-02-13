@@ -186,16 +186,20 @@ class BasicLayout extends React.PureComponent {
               }
               {
                 getRoutes(match.path, routerData).map(item =>
-                  (
-                    <AuthorizedRoute
-                      key={item.key}
-                      path={item.path}
-                      component={item.component}
-                      exact={item.exact}
-                      authority={item.authority}
-                      redirectPath="/exception/403"
-                    />
-                  )
+                  {
+                    console.log(" bingo path: " + match.path);
+                    return (
+                      <AuthorizedRoute
+                        key={item.key}
+                        path={item.path}
+                        component={item.component}
+                        exact={item.exact}
+                        authority={item.authority}
+                        redirectPath="/exception/403"
+                      />
+                    );
+
+                  }
                 )
               }
               <Redirect exact from="/" to={bashRedirect} />

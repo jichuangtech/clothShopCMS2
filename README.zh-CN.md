@@ -3,6 +3,7 @@ yield put({type: 'one-namespace/reducerFunction', payload});
 
 二：上线的静态资源的地址
 "publicPath": "https://www.jichuangtech.site/clothShopCMS2/",
+"publicPath": "/",
 本地
 "publicPath": "/",
 [English](./README.md) | 简体中文
