@@ -1,7 +1,8 @@
 一：dva 在一个 model中调用另一个model的方法
 yield put({type: 'one-namespace/reducerFunction', payload});
 
-二：上线的静态资源的地址
+二：上线的静态资源的地址，
+（一定要注意修改，这个地址，不然 npm run build出现的 /dist/ 目录下 index.html中引用 xxx.css 和 引用 xxx.js 的路径回不对）
 "publicPath": "https://www.jichuangtech.site/clothShopCMS2/",
 "publicPath": "/",
 本地
